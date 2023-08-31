@@ -1,0 +1,126 @@
+{% extends "app_crypto/base.html" %}
+{% load static %}
+{% load sass_tags %}
+
+
+{% block title %}
+<div class="container-fluid">
+    <h3>{{crypto|upper}} - Market Data </h3>
+</div>
+
+{% endblock title %}
+
+{% block head %}
+
+
+{% endblock head %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+    {% if messages %}
+
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        {{message}}
+    </div>
+
+    {% endfor %}
+    {% endif %}
+
+</div>
+
+<div class="container-fluid">
+
+    <form class="row row-cols-lg-auto g-3 align-items-center" method="POST" action="">
+        {% csrf_token %}
+
+        <div class="col-12">
+            <div class="input-group">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Start Date</span>
+                <input type="date" class="form-control" id="startDate" name="startDate" min="2009-01-03"
+                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="input-group">
+                <span class="input-group-text " id="inputGroup-sizing-sm">End Date</span>
+                <input type="date" class="form-control" id="endDate" name="endDate" min="2009-01-03"
+                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+        </div>
+
+        <div class="col-12">
+
+            <select class="form-select" id="inlineFormSelectPref" onChange="redirect_crypto_page();">
+                <option disabled hidden selected> -- Select Crypto --</option>
+                {% for i in currencies %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="btn btn-outline-primary">Preference</label>
+            <button type="submit" class="btn btn-dark border-custom" id="search">Search</button>
+        </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="btn btn-outline-primary">Preference</label>
+            <button type="reset" class="btn btn-dark border-custom" id="reset">Reset</button>
+        </div>
+
+    </form>
+
+</div>
+
+<hr>
+
+<div class="spinner">
+    <div id="spinner-box" class="text-center mt-3">
+        <div class="spinner-border" role="status">
+
+        </div>
+    </div>
+</div>
+
+<!-- Getting data from render context and passing to javascript -->
+{{crypto_data|json_script:"crypto_data"}}
+<!--  -->
+
+<div class="container-fluid" style="text-align: center;">
+
+    <table class="table table-striped table-bordered table-dark hover text-center" id="market_data_table"
+        style="width:100%">
+        <thead>
+            <tr>
+                <th style="text-align: center">Date</th>
+                <th style="text-align: center">Open</th>
+                <th style="text-align: center">High</th>
+                <th style="text-align: center">Low</th>
+                <th style="text-align: center">Close</th>
+                <th style="text-align: center">Adj Close</th>
+                <th style="text-align: center">Volume</th>
+            </tr>
+        </thead>
+
+
+
+    </table>
+
+</div>
+
+
+
+{% endblock content %}
+
+{% block js_scripts %}
+<script src="{% static 'app_crypto/script_market.js' %}"></script>
+<script src=" {% static 'app_crypto/script-spinner-crypto-list.js' %}" defer></script>
+{% endblock js_scripts %}
